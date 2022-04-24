@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyq.shorturl.mapper.UrlMapper">
+
+    <select id="getLongUrlByShortUrl" resultType="java.lang.String">
+        select long_url
+        from url_map
+        where short_url = #{shortUrl}
+    </select>
+
+    <insert id="saveUrlMap" parameterType="com.lyq.shorturl.model.UrlMap" useGeneratedKeys="true" keyProperty="id">
+        insert into url_map (short_url, long_url, view_times, create_time)
+        values (#{shortUrl}, #{longUrl}, #{viewTimes}, #{createTime})
+    </insert>
+
+    <update id="updateUrlViewTimes" >
+        update url_map
+        set view_times = view_times + 1
+        where short_url = #{shortUrl}
+    </update>
+
+</mapper>

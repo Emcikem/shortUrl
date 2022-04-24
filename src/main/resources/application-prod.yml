@@ -1,0 +1,20 @@
+server:
+  port: 8060
+  host: http://110.40.220.211:8060/
+
+spring:
+  datasource:
+    driver-class-name=: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://110.40.220.211:3306/short_url?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: admin
+
+  redis:
+    host: 101.43.213.127
+    port: 6379
+    connect-timeout: 10000ms
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
