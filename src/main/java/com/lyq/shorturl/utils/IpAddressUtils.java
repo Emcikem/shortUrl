@@ -43,9 +43,11 @@ public class IpAddressUtils {
                 } catch (UnknownHostException e) {
                     log.error("getIpAddress exception:", e);
                 }
-                ip = inet.getHostAddress();
+                if (inet != null) {
+                    ip = inet.getHostAddress();
+                }
             }
         }
-        return StringUtils.substringBefore(ip, ",");
+        return ip == null ? "unknown" : StringUtils.substringBefore(ip, ",");
     }
 }

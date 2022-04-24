@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class JacksonUtils {
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String writeValueAsString(Object value) {
         try {

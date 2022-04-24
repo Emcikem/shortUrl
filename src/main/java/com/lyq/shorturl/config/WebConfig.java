@@ -1,10 +1,11 @@
 package com.lyq.shorturl.config;
 
 import com.lyq.shorturl.interceptor.AccessLimitInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.annotation.Resource;
 
 /**
  * 配置CORS跨域支持、拦截器
@@ -12,9 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Autowired
+    @Resource
     private AccessLimitInterceptor accessLimitInterceptor;
-
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

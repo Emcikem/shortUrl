@@ -17,7 +17,7 @@ public class IndexController {
     @Resource
     private IUrlService urlService;
 
-    private static String host;
+    private String host;
 
     @Value("${server.host}")
     public void setHost(String host) {

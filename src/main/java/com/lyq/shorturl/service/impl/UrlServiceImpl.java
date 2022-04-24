@@ -2,24 +2,26 @@ package com.lyq.shorturl.service.impl;
 
 import cn.hutool.bloomfilter.BitMapBloomFilter;
 import cn.hutool.bloomfilter.BloomFilterUtil;
+import com.lyq.shorturl.log.TimerLog;
 import com.lyq.shorturl.mapper.UrlMapper;
 import com.lyq.shorturl.model.UrlMap;
 import com.lyq.shorturl.service.IUrlService;
 import com.lyq.shorturl.utils.HashUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lyq.shorturl.utils.LRUCache;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class UrlServiceImpl implements IUrlService {
 
-    @Autowired
+    @Resource
     private UrlMapper urlMapper;
 
-    @Autowired
+    @Resource
     private StringRedisTemplate redisTemplate;
 
     //自定义长链接防重复字符串
@@ -28,15 +30,23 @@ public class UrlServiceImpl implements IUrlService {
     private static final long TIMEOUT = 10;
     //创建布隆过滤器
     private static final BitMapBloomFilter FILTER = BloomFilterUtil.createBitMap(10);
+    // LRUCache
+    private static final LRUCache<String, String> cache = new LRUCache<>(100);
 
-
+    @TimerLog
     @Override
     public String getLongUrlByShortUrl(String shortURL) {
+        // 本地cache里查找
+        String longURL = cache.get(shortURL);
+        if (longURL != null) {
+            return longURL;
+        }
         // 查找Redis中是否有缓存
-        String longURL = redisTemplate.opsForValue().get(shortURL);
+        longURL = redisTemplate.opsForValue().get(shortURL);
         if (longURL != null) {
             // 有缓存，延迟缓存时间
             redisTemplate.expire(shortURL, TIMEOUT, TimeUnit.MINUTES);
+            cache.put(shortURL, longURL);
             return longURL;
         }
         // Redis没有缓存，从数据库查找
@@ -46,6 +56,7 @@ public class UrlServiceImpl implements IUrlService {
             // 如果是并发同一个请求，那就是缓存击穿
             // 数据库有此短链接，添加缓存
             redisTemplate.opsForValue().set(shortURL, longURL, TIMEOUT, TimeUnit.MINUTES);
+            cache.put(shortURL, longURL);
             return longURL;
         }
 
