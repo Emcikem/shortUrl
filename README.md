@@ -7,6 +7,7 @@ springboot + thymeleaf
 
 参考
 https://hardcore.feishu.cn/docs/doccnAfY0f35ZgnrFg7jSTQmOOf
+
 https://github.com/Naccl/ShortURL
 
 存储层：MySQL
@@ -15,6 +16,6 @@ https://github.com/Naccl/ShortURL
 
 布隆过滤器主要用于优化存储，LRUCache，redis主要用于优化查询
 
-业务：302重定向，MurmurHash计算hash
+业务：302重定向，MurmurHash计算hash，MurmurHash 就是一种非加密型哈希算法，与 MD5、SHA 等常见哈希函数相比，性能与随机分布特征都要更佳。MurmurHash 有 32 bit、64 bit、128 bit 的实现，32 bit 已经足够表示近 43 亿个短链接
 
 采用302而不是301的原因在于301 为永久重定向、302 为临时重定向，因为302便于统计网站的访问次数。
