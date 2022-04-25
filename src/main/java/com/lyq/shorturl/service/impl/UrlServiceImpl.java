@@ -76,6 +76,7 @@ public class UrlServiceImpl implements IUrlService {
             if (redisLongURL != null && redisLongURL.equals(originalURL)) {
                 // Redis有缓存，重置过期时间
                 redisTemplate.expire(shortURL, TIMEOUT, TimeUnit.MINUTES);
+                cache.put(shortURL, longURL);
                 return shortURL;
             }
             // 没有缓存，在长链接后加上指定字符串，重新hash
@@ -86,6 +87,7 @@ public class UrlServiceImpl implements IUrlService {
             try {
                 urlMapper.saveUrlMap(new UrlMap(shortURL, originalURL));
                 FILTER.add(shortURL);
+                cache.put(shortURL, longURL);
                 // 添加缓存
                 redisTemplate.opsForValue().set(shortURL, originalURL, TIMEOUT, TimeUnit.MINUTES);
             } catch (Exception e) {

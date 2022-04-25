@@ -12,7 +12,6 @@ spring:
   redis:
     host: 101.43.213.127
     port: 6379
-#    database: 1
     connect-timeout: 10000ms
 
 mybatis:

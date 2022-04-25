@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class LRUTest extends BaseTest{
 
     @Test
-    public void spped() {
+    public void speed() {
         long start = System.currentTimeMillis();
         LRUCache<String, String> cache = new LRUCache<>(1000);
         for (int i = 1; i <= 10000000; i++) {
@@ -21,6 +21,5 @@ public class LRUTest extends BaseTest{
             else cache1.get(String.valueOf(i - 1000));
         }
         System.out.println(System.currentTimeMillis() - start);
-
     }
 }
