@@ -1,8 +1,9 @@
-package com.lyq.shorturl.utils;
+package com.lyq.shorturl.cache;
 
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class LRUCache<K, V> {
 

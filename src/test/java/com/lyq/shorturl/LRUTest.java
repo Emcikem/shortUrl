@@ -1,6 +1,6 @@
 package com.lyq.shorturl;
 
-import com.lyq.shorturl.utils.LRUCache;
+import com.lyq.shorturl.cache.LRUCache;
 import org.junit.jupiter.api.Test;
 
 public class LRUTest extends BaseTest{

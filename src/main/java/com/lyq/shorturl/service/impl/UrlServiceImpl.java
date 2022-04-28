@@ -7,7 +7,7 @@ import com.lyq.shorturl.mapper.UrlMapper;
 import com.lyq.shorturl.model.UrlMap;
 import com.lyq.shorturl.service.IUrlService;
 import com.lyq.shorturl.utils.HashUtils;
-import com.lyq.shorturl.utils.LRUCache;
+import com.lyq.shorturl.cache.LRUCache;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
