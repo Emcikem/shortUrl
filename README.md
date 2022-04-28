@@ -1,6 +1,8 @@
 # 长短链
 学习的一个项目，长链接转短链接，主要是hash，控制并发，Ip限流
 
+如果分布式部署话，redis就需要用一致性hash算法，避免缓存雪崩
+
 
 ## 技术栈
 springboot + thymeleaf
