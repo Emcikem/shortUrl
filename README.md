@@ -26,8 +26,8 @@ https://hardcore.feishu.cn/docs/doccnAfY0f35ZgnrFg7jSTQmOOf
 https://github.com/Naccl/ShortURL
 
 ## TODO
-- [] ip黑白名单
-- [] 支持自定义格式
+- [ ] ip黑白名单
+- [ ] 支持自定义格式
 
 
 ## 一致性hash算法
