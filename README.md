@@ -1,14 +1,11 @@
 # 长短链
 学习的一个项目，长链接转短链接，主要是hash，控制并发，Ip限流
 
+如果分布式部署话，redis就需要用一致性hash算法，避免缓存雪崩
+
 
 ## 技术栈
 springboot + thymeleaf
-
-参考
-https://hardcore.feishu.cn/docs/doccnAfY0f35ZgnrFg7jSTQmOOf
-
-https://github.com/Naccl/ShortURL
 
 存储层：MySQL
 
@@ -20,6 +17,17 @@ https://github.com/Naccl/ShortURL
 
 采用302而不是301的原因在于301 为永久重定向、302 为临时重定向，因为302便于统计网站的访问次数。
 
+一致性hash减少缓存雪崩
+
+
+参考
+https://hardcore.feishu.cn/docs/doccnAfY0f35ZgnrFg7jSTQmOOf
+
+https://github.com/Naccl/ShortURL
+
+## TODO
+- [ ] ip黑白名单
+- [ ] 支持自定义格式
 
 
 ## 一致性hash算法
