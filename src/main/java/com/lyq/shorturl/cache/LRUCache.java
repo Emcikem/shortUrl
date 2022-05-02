@@ -5,12 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class LRUCache<K, V> {
+/**
+ * LRU：定义缓存的大小后，如果说put操作了，那么就会把元素更新，放到队头
+ * 淘汰策略：删除最近最久未使用
+ * @param <K>
+ * @param <V>
+ */
+public class LRUCache<K, V> implements ICache<K, V>{
 
-    private final Map<K, DLinkedNode> cache;
+    private final Map<K, DLinkedNode> cache; // 判断Key是否存在
     private int size;
     private final int capacity; // size是当前的大小，capacity表示lru的容量
-    private final DLinkedNode head, tail;
+    private final DLinkedNode head, tail; // 一个双向链表
 
     /**
      * 节点，有前指针和后指针
@@ -30,9 +36,8 @@ public class LRUCache<K, V> {
         this.size = 0;
         assert capacity > 0;
         this.capacity = capacity;
-        head = new DLinkedNode();
-        tail = new DLinkedNode();
         cache = new HashMap<>(capacity);
+        head = new DLinkedNode(); tail = new DLinkedNode();
         head.next = tail; // 循环链表
         tail.prev = head;
     }
@@ -42,6 +47,7 @@ public class LRUCache<K, V> {
      * 存在就把值移到头部
      * O(1)
      */
+    @Override
     public V get(K key) {
         DLinkedNode node = cache.get(key);
         if (node == null) {
@@ -56,6 +62,7 @@ public class LRUCache<K, V> {
      * 存在就更新值，移到头部
      * O(1)
      */
+    @Override
     public void put(K key, V value) {
         DLinkedNode node = cache.get(key);
         if(node == null){
