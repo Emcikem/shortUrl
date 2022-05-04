@@ -25,6 +25,18 @@ https://hardcore.feishu.cn/docs/doccnAfY0f35ZgnrFg7jSTQmOOf
 
 https://github.com/Naccl/ShortURL
 
+
+## 技术设计
+1. 读与写
+这个项目是一个少写多读的项目，那么需要对读写进行优化。
+
+目前对于写，采用布隆过滤器，减少写的次数
+
+对于读，采用LRUCache或者LFUCache以及redis进行优化。
+
+
+测试过，写大概200ms，读100ms不到。
+
 ## TODO
 - [ ] ip黑白名单
 - [ ] 支持自定义格式
