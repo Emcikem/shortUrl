@@ -1,4 +1,4 @@
-package com.lyq.shorturl.log;
+package com.lyq.shorturl.aop;
 
 import java.lang.annotation.*;
 

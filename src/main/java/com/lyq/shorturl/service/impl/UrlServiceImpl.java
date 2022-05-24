@@ -2,7 +2,6 @@ package com.lyq.shorturl.service.impl;
 
 import cn.hutool.bloomfilter.BitMapBloomFilter;
 import cn.hutool.bloomfilter.BloomFilterUtil;
-import com.lyq.shorturl.log.TimerLog;
 import com.lyq.shorturl.mapper.UrlMapper;
 import com.lyq.shorturl.model.UrlMap;
 import com.lyq.shorturl.service.IUrlService;
@@ -33,7 +32,6 @@ public class UrlServiceImpl implements IUrlService {
     // LRUCache
     private static final LRUCache<String, String> cache = new LRUCache<>(100);
 
-    @TimerLog
     @Override
     public String getLongUrlByShortUrl(String shortURL) {
         // 本地cache里查找
@@ -83,26 +81,41 @@ public class UrlServiceImpl implements IUrlService {
             longURL += DUPLICATE;
             shortURL = saveUrlMap(HashUtils.hashToBase62(longURL), longURL, originalURL);
         } else {
-            // 短链不存在，直接存入数据库
-            try {
-                urlMapper.saveUrlMap(new UrlMap(shortURL, originalURL));
+            // 短链本地不存在，直接存入数据库
+            String longUrlByShortUrl = urlMapper.getLongUrlByShortUrl(shortURL);
+            if (longUrlByShortUrl.equals(originalURL)) {
                 FILTER.add(shortURL);
-                cache.put(shortURL, longURL);
+                cache.put(shortURL, originalURL);
                 // 添加缓存
                 redisTemplate.opsForValue().set(shortURL, originalURL, TIMEOUT, TimeUnit.MINUTES);
-            } catch (Exception e) {
-                if (e instanceof DuplicateKeyException) {
-                    // 数据库已经存在此短链接，则可能是布隆过滤器误判，在长链接后加上指定字符串，重新hash
-                    // 为什么会有这种情况，因为单机部署是不会出现的，只存在多机部署的情况。
-                    longURL += DUPLICATE;
-                    shortURL = saveUrlMap(HashUtils.hashToBase62(longURL), longURL, originalURL);
-                } else {
-                    throw e;
-                }
+            } else {
+                shortURL = saveToDB(shortURL, longURL, originalURL);
             }
         }
         return shortURL;
     }
+
+    private String saveToDB(String shortURL, String longURL, String originalURL) {
+        try {
+            urlMapper.saveUrlMap(new UrlMap(shortURL, originalURL));
+            FILTER.add(shortURL);
+            cache.put(shortURL, originalURL);
+            // 添加缓存
+            redisTemplate.opsForValue().set(shortURL, originalURL, TIMEOUT, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            if (e instanceof DuplicateKeyException) {
+                // 数据库已经存在此短链接，则可能是布隆过滤器误判，在长链接后加上指定字符串，重新hash
+                // 为什么会有这种情况，因为单机部署是不会出现的，只存在多机部署的情况。
+                longURL += DUPLICATE;
+                shortURL = saveToDB(HashUtils.hashToBase62(longURL), longURL, originalURL);
+                return shortURL;
+            } else {
+                throw e;
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public void updateUrlViews(String shortURL) {

@@ -1,6 +1,7 @@
 package com.lyq.shorturl.controller;
 
 import com.lyq.shorturl.annotation.AccessLimit;
+import com.lyq.shorturl.aop.TimerLog;
 import com.lyq.shorturl.model.Result;
 import com.lyq.shorturl.service.IUrlService;
 import com.lyq.shorturl.utils.HashUtils;
@@ -30,7 +31,8 @@ public class IndexController {
     }
 
     @ResponseBody
-    @AccessLimit(seconds = 10, maxCount = 1, msg = "10秒内只能生成一次短链接")
+    @TimerLog
+    @AccessLimit(seconds = 10, maxCount = 2, msg = "10秒内只能生成两次短链接")
     @PostMapping("/generate")
     public Result<Object> generateShortURL(@RequestParam String longURL) {
         if (UrlUtils.checkURL(longURL)) {
@@ -45,6 +47,7 @@ public class IndexController {
 
 
     @AccessLimit(seconds = 10, maxCount = 5, msg = "Ip限流")
+    @TimerLog
     @GetMapping("/{shortUrl}")
     public String redirect(@PathVariable String shortUrl) {
         String longURL = urlService.getLongUrlByShortUrl(shortUrl);

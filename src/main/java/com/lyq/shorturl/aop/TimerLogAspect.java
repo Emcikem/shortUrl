@@ -1,4 +1,4 @@
-package com.lyq.shorturl.log;
+package com.lyq.shorturl.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,7 +15,7 @@ public class TimerLogAspect {
     /**
      * Service层切点  增加时间日志
      */
-    @Pointcut("@annotation(com.lyq.shorturl.log.TimerLog)")
+    @Pointcut("@annotation(com.lyq.shorturl.aop.TimerLog)")
     public void ServiceAspect() {
 
     }
@@ -30,7 +30,7 @@ public class TimerLogAspect {
         long start = System.currentTimeMillis();
             //执行方法
         Object obj = joinPoint.proceed();
-        log.info("【计时器@TimerLog】{}.{} - 结束计时，用时：{} 。", name, methodName, System.currentTimeMillis() - start);
+        log.info("【计时器@TimerLog】{}.{}，用时：{}ms 。", name, methodName, System.currentTimeMillis() - start);
         //建议将异常抛出去，否则其他AOP捕获不到异常，无法做出处理
         return obj;
     }
