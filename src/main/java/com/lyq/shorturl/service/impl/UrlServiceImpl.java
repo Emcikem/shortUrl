@@ -83,7 +83,7 @@ public class UrlServiceImpl implements IUrlService {
         } else {
             // 短链本地不存在，直接存入数据库
             String longUrlByShortUrl = urlMapper.getLongUrlByShortUrl(shortURL);
-            if (longUrlByShortUrl.equals(originalURL)) {
+            if (originalURL.equals(longUrlByShortUrl)) {
                 FILTER.add(shortURL);
                 cache.put(shortURL, originalURL);
                 // 添加缓存
