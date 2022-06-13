@@ -10,7 +10,7 @@ public interface UrlMapper {
 
     String getLongUrlByShortUrl(String shortUrl);
 
-    int saveUrlMap(UrlMap urlMap);
+    void saveUrlMap(UrlMap urlMap);
 
-    int updateUrlViewTimes(String shortUrl);
+    void updateUrlViewTimes(String shortUrl);
 }

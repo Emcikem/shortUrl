@@ -103,6 +103,7 @@ public class UrlServiceImpl implements IUrlService {
             cache.put(shortURL, originalURL);
             // 添加缓存
             redisTemplate.opsForValue().set(shortURL, originalURL, TIMEOUT, TimeUnit.MINUTES);
+            return shortURL;
         } catch (Exception e) {
             if (e instanceof DuplicateKeyException) {
                 // 数据库已经存在此短链接，则可能是布隆过滤器误判，在长链接后加上指定字符串，重新hash
@@ -114,7 +115,6 @@ public class UrlServiceImpl implements IUrlService {
                 throw e;
             }
         }
-        return null;
     }
 
 
