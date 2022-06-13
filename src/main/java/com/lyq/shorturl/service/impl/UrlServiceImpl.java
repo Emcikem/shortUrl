@@ -30,7 +30,7 @@ public class UrlServiceImpl implements IUrlService {
     //创建布隆过滤器
     private static final BitMapBloomFilter FILTER = BloomFilterUtil.createBitMap(10);
     // LRUCache
-    private static final LRUCache<String, String> cache = new LRUCache<>(100);
+    private static final LRUCache<String, String> cache = new LRUCache<>(100000);
 
     @Override
     public String getLongUrlByShortUrl(String shortURL) {
@@ -82,6 +82,7 @@ public class UrlServiceImpl implements IUrlService {
             shortURL = saveUrlMap(HashUtils.hashToBase62(longURL), longURL, originalURL);
         } else {
             // 短链本地不存在，直接存入数据库
+            // 这里优化下，防止多次存同一个url
             String longUrlByShortUrl = urlMapper.getLongUrlByShortUrl(shortURL);
             if (originalURL.equals(longUrlByShortUrl)) {
                 FILTER.add(shortURL);
